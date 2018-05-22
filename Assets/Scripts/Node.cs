@@ -4,11 +4,14 @@ using UnityEngine.EventSystems;
 public class Node : MonoBehaviour {
 
     public Color hoverColor;
+    public Color CantAffordColor;
 
     buildManager buildManager;
 
+    [Header("Optional")]
+    public GameObject turret;
 
-    private GameObject turret;
+
     private Renderer rend;
     private Color startColor;
     public Vector3 buildOffset;
@@ -21,13 +24,18 @@ public class Node : MonoBehaviour {
         buildManager = buildManager.instance;
     }
 
+    public Vector3 GetBuildPosition()
+    {
+        return transform.position + buildOffset;
+    }
+
     private void OnMouseDown()
     {
         // exit if over a UI element
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (buildManager.GetTurretToBuild() == null)
+        if (!buildManager.CanBuild)
             return;
 
 
@@ -39,9 +47,12 @@ public class Node : MonoBehaviour {
         }
 
         //Build a turret
-        GameObject turretToBuild = buildManager.GetTurretToBuild();
-        turret = (GameObject) Instantiate(turretToBuild, transform.position + buildOffset, transform.rotation);
-        buildManager.SetTurretToBuild(null);
+        buildManager.BuildTurretOn(this);
+        //Deselect the turret unless shift is held
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            buildManager.DeselectTurret();
+        }
     }
 
     void OnMouseEnter()
@@ -50,9 +61,21 @@ public class Node : MonoBehaviour {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (buildManager.GetTurretToBuild() == null)
+        if (!buildManager.CanBuild)
             return;
-        rend.material.color = hoverColor;
+
+        if (buildManager.TurretSelected())
+        {
+            if(buildManager.CanAfford)
+            {
+                rend.material.color = hoverColor;
+            }
+            else
+            {
+                rend.material.color = CantAffordColor;
+            }
+            
+        }
         
     }
 
