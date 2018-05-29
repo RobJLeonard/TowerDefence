@@ -1,16 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shop : MonoBehaviour {
 
     buildManager buildManager;
     public TurretBlueprint standardTurret;
+    public Text standardCost;
     public TurretBlueprint missileTurret;
+    public Text missileCost;
 
     private void Start()
     {
         buildManager = buildManager.instance;
+        standardCost.text = string.Format("${0}", standardTurret.turretCost);
+        missileCost.text = string.Format("${0}", missileTurret.turretCost);
     }
 
     public void selectStandardTurret()

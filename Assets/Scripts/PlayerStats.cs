@@ -22,7 +22,7 @@ public class PlayerStats : MonoBehaviour {
     //Update and display stats
     public void Update()
     {
-        playerMoney.text = ("Cash Money: " + Money.ToString());
+        playerMoney.text = ("$" + Money.ToString());
     }
 
 

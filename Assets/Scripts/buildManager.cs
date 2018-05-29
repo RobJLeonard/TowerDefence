@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+
 public class buildManager : MonoBehaviour {
 
     public static buildManager instance;
@@ -17,6 +18,9 @@ public class buildManager : MonoBehaviour {
     public GameObject standardTurretPrefab;
     public GameObject missileTurretPrefab;
 
+
+    public GameObject buildEffect;
+
     private TurretBlueprint turretToBuild;
 
     public bool CanBuild {  get { return turretToBuild != null;  } }
@@ -33,6 +37,10 @@ public class buildManager : MonoBehaviour {
         else
         {
             PlayerStats.Money -= turretToBuild.turretCost;
+
+            GameObject effect = (GameObject)Instantiate(buildEffect, node.GetBuildPosition(), Quaternion.identity);
+            Destroy(effect, 5f);
+
             GameObject turret = (GameObject)Instantiate(turretToBuild.turretPrefab, node.GetBuildPosition(), Quaternion.identity);
             node.turret = turret;
 
